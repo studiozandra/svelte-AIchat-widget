@@ -49,6 +49,16 @@ npm run dev
 - `POST /api/chat/send` - Message streaming
 - `GET /api/chat/history` - Conversation history
 
+## Authentication Requirements
+
+⚠️ **This chatbot requires Better Auth.** Install and configure it first:
+
+```bash
+npm install better-auth
+```
+
+The chatbot endpoints authenticate users via `import { auth } from '$lib/server/auth'` and verify sessions server-side. Users must be logged in to access the chatbot, and each user's chat history is isolated. See [Better Auth docs](https://www.better-auth.com/docs) for setup.
+
 ## What's Included
 
 ### Database Layer (`db.ts`)

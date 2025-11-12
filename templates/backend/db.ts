@@ -195,6 +195,27 @@ export function getMessageCount(sessionId: string): number {
 }
 
 /**
+ * Validates that a session belongs to a specific user
+ * Prevents users from accessing other users' chat sessions
+ * @param sessionId - The session ID to validate
+ * @param userId - The authenticated user ID
+ * @returns true if session belongs to user, false otherwise
+ */
+export function validateSessionOwnership(sessionId: string, userId: string): boolean {
+	const session = db
+		.prepare('SELECT user_id FROM chat_sessions WHERE id = ?')
+		.get(sessionId) as { user_id: string | null } | undefined;
+
+	// Session doesn't exist or doesn't have a user_id
+	if (!session || !session.user_id) {
+		return false;
+	}
+
+	// Check if session belongs to the authenticated user
+	return session.user_id === userId;
+}
+
+/**
  * Close database connection (call on server shutdown)
  */
 export function closeDatabase() {

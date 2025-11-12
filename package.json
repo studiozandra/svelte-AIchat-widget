@@ -1,6 +1,6 @@
 {
 	"name": "@studiozandra/svelte-ai-chat-widget",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "A reusable AI-powered chatbot widget for SvelteKit applications with SSE streaming support, built with Svelte 5 runes",
 	"author": "Zandra Kubota <studiozandra@users.noreply.github.com>",
 	"license": "MIT",

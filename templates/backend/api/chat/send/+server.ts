@@ -1,6 +1,7 @@
 /**
  * POST /api/chat/send
  * Handles sending messages to the AI and streaming responses back via SSE
+ * REQUIRES AUTHENTICATION: Users must be logged in to access chatbot
  */
 
 import Anthropic from '@anthropic-ai/sdk';
@@ -8,12 +9,33 @@ import type { RequestHandler } from './$types';
 import { getEnvConfig } from '$lib/server/env';
 import { getOrCreateSession, saveMessage, getConversationHistory } from '$lib/server/db';
 import { checkRateLimit } from '$lib/server/rate-limit';
+import { auth } from '$lib/server/auth';
 
 const config = getEnvConfig();
 const anthropic = new Anthropic({ apiKey: config.anthropicApiKey });
 
 export const POST: RequestHandler = async ({ request, getClientAddress }) => {
 	try {
+		// ADD: Authentication check - MUST BE FIRST
+		const session = await auth.api.getSession({
+			headers: request.headers
+		});
+
+		if (!session || !session.user) {
+			return new Response(
+				JSON.stringify({
+					error: 'Authentication required. Please log in to use the chatbot.'
+				}),
+				{
+					status: 401,
+					headers: { 'Content-Type': 'application/json' }
+				}
+			);
+		}
+
+		// Get verified user ID from session (never trust client-provided userId)
+		const authenticatedUserId = session.user.id;
+
 		// Rate limiting
 		const clientIp = getClientAddress();
 		const rateLimit = checkRateLimit(
@@ -59,9 +81,9 @@ export const POST: RequestHandler = async ({ request, getClientAddress }) => {
 			});
 		}
 
-		// Get or create session
-		const userId = context?.userId;
-		const sessionId = getOrCreateSession(clientSessionId, userId);
+		// CHANGE: Use authenticated user ID, not client-provided
+		// Get or create session tied to authenticated user
+		const sessionId = getOrCreateSession(clientSessionId, authenticatedUserId);
 
 		// Save user message
 		saveMessage(sessionId, 'user', message);

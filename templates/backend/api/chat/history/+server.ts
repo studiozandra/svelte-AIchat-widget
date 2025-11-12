@@ -1,13 +1,35 @@
 /**
  * GET /api/chat/history
  * Retrieves conversation history for a given session
+ * REQUIRES AUTHENTICATION: Users can only access their own chat history
  */
 
 import type { RequestHandler } from './$types';
-import { getMessages, getMessageCount } from '$lib/server/db';
+import { getMessages, getMessageCount, validateSessionOwnership } from '$lib/server/db';
+import { auth } from '$lib/server/auth';
 
-export const GET: RequestHandler = async ({ url }) => {
+export const GET: RequestHandler = async ({ url, request }) => {
 	try {
+		// ADD: Authentication check - MUST BE FIRST
+		const session = await auth.api.getSession({
+			headers: request.headers
+		});
+
+		if (!session || !session.user) {
+			return new Response(
+				JSON.stringify({
+					error: 'Authentication required. Please log in to view chat history.'
+				}),
+				{
+					status: 401,
+					headers: { 'Content-Type': 'application/json' }
+				}
+			);
+		}
+
+		// Get verified user ID from session
+		const authenticatedUserId = session.user.id;
+
 		// Parse query parameters
 		const sessionId = url.searchParams.get('sessionId');
 		const limit = parseInt(url.searchParams.get('limit') || '50');
@@ -19,6 +41,19 @@ export const GET: RequestHandler = async ({ url }) => {
 				status: 400,
 				headers: { 'Content-Type': 'application/json' }
 			});
+		}
+
+		// ADD: Verify session belongs to authenticated user
+		if (!validateSessionOwnership(sessionId, authenticatedUserId)) {
+			return new Response(
+				JSON.stringify({
+					error: 'Unauthorized. You can only access your own chat history.'
+				}),
+				{
+					status: 403,
+					headers: { 'Content-Type': 'application/json' }
+				}
+			);
 		}
 
 		// Validate limit (max 100)

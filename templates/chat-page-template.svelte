@@ -4,11 +4,12 @@
 <script lang="ts">
 	import { ChatWidget } from '@studiozandra/svelte-ai-chat-widget';
 
-	// Optional: User context to send with each message
+	// Optional: Context to send with each message
+	// NOTE: Do NOT include userId - it's automatically extracted from your authenticated session
 	const userContext = {
-		userId: '123',
-		role: 'user',
-		pageUrl: typeof window !== 'undefined' ? window.location.href : ''
+		pageUrl: typeof window !== 'undefined' ? window.location.href : '',
+		// Add other non-sensitive context as needed
+		userAgent: typeof window !== 'undefined' ? navigator.userAgent : ''
 	};
 
 	// Optional: Custom internationalization
@@ -16,7 +17,10 @@
 		placeholder: 'Type your message...',
 		title: 'AI Assistant',
 		sendButton: 'Send',
-		errorMessage: 'Something went wrong. Please try again.'
+		errorMessage: 'Something went wrong. Please try again.',
+		// Add these for authentication
+		authRequired: 'Please log in to use the chatbot',
+		unauthorized: 'You are not authorized to access this chat'
 	};
 
 	// Optional: Event handlers
@@ -31,13 +35,22 @@
 	function handleMessage(message: { role: string; content: string }) {
 		console.log('Message:', message);
 	}
+
+	function handleError(error: { message: string; status?: number }) {
+		console.error('Chat error:', error);
+		// Handle 401 (auth required) and 403 (forbidden) errors
+		if (error.status === 401) {
+			// Redirect to login or show auth modal
+			window.location.href = '/login?redirect=' + encodeURIComponent(window.location.pathname);
+		}
+	}
 </script>
 
 <div class="page-container">
 	<h1>Welcome to My App</h1>
 	<p>Your page content goes here...</p>
 
-	<!-- Chat Widget -->
+	<!-- Chat Widget - Only works for authenticated users -->
 	<ChatWidget
 		sendMessageEndpoint="/api/chat/send"
 		historyEndpoint="/api/chat/history"
@@ -47,6 +60,7 @@
 		onopen={handleOpen}
 		onclose={handleClose}
 		onmessage={handleMessage}
+		onerror={handleError}
 	/>
 </div>
 
