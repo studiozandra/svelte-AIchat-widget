@@ -1,6 +1,6 @@
 {
 	"name": "@studiozandra/svelte-ai-chat-widget",
-	"version": "1.1.0",
+	"version": "1.2.1",
 	"description": "A reusable AI-powered chatbot widget for SvelteKit applications with SSE streaming support, built with Svelte 5 runes",
 	"author": "Zandra Kubota <studiozandra@users.noreply.github.com>",
 	"license": "MIT",
@@ -27,6 +27,9 @@
 		"url": "https://github.com/studiozandra/svelte-ai-chat-widget/issues"
 	},
 	"homepage": "https://github.com/studiozandra/svelte-ai-chat-widget#readme",
+	"bin": {
+		"svelte-ai-chat-widget": "./bin/setup.js"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
@@ -49,6 +52,7 @@
 		"!dist/**/*.test.*",
 		"!dist/**/*.spec.*",
 		"templates",
+		"bin",
 		"README.md",
 		"LICENSE",
 		"CHANGELOG.md"

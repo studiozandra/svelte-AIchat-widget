@@ -24,7 +24,45 @@ npm install @studiozandra/svelte-ai-chat-widget
 
 ## Quick Start
 
-### 1. Add the Widget
+### 1. Run Setup CLI
+
+The easiest way to get started is with the interactive setup:
+
+```bash
+npx svelte-ai-chat-widget setup
+```
+
+This will:
+- ✅ Install backend API endpoints (chat send & history)
+- ✅ Install database utilities (SQLite)
+- ✅ Install environment config & rate limiting
+- ✅ Create a demo page (optional)
+- ✅ Show you next steps
+
+### 2. Configure Environment
+
+```bash
+# Install required dependencies
+npm install @anthropic-ai/sdk better-sqlite3 @types/better-sqlite3 better-auth
+
+# Set up your API key
+cp .env.example .env
+# Add your ANTHROPIC_API_KEY to .env
+```
+
+### 3. Start Development Server
+
+```bash
+npm run dev
+```
+
+Visit the demo page (default: `http://localhost:5173/chatbot-demo`) to see it in action!
+
+---
+
+### Manual Setup (Alternative)
+
+If you prefer manual setup:
 
 ```svelte
 <script lang="ts">
@@ -38,25 +76,7 @@ npm install @studiozandra/svelte-ai-chat-widget
 />
 ```
 
-### 2. Set Up Backend
-
-This widget requires backend API endpoints. **Complete backend implementation included** in `templates/backend/`.
-
-**Quick setup (5 minutes):**
-
-```bash
-# Install dependencies
-npm install @anthropic-ai/sdk better-sqlite3
-
-# Copy backend files
-cp -r templates/backend/* src/
-
-# Configure .env
-echo "ANTHROPIC_API_KEY=sk-ant-xxx" > .env
-
-# Start server
-npm run dev
-```
+Then copy backend files from `templates/backend/` to your project.
 
 📖 **[Full Backend Setup Guide →](./templates/backend/BACKEND_SETUP.md)**
 
@@ -232,17 +252,23 @@ chatStore.addMessage({ role: 'user', content: 'Hello' });
 
 The included backend implementation provides:
 - ✅ API key security (server-side only)
+- ✅ **User authentication** (Better Auth required)
+- ✅ **Session validation** (user-scoped chat history)
 - ✅ Rate limiting (10 req/min default)
 - ✅ Input validation
 - ✅ SQL injection prevention
-- ✅ Session validation
+
+**Authentication Requirements:**
+- 🔒 Better Auth must be configured
+- 🔒 All chat endpoints require authenticated sessions
+- 🔒 Users can only access their own chat history
+- 🔒 User IDs are server-verified (not client-provided)
 
 **Production recommendations:**
-- Add user authentication
-- Implement authorization checks
 - Use HTTPS
 - Enable CORS properly
 - Add content moderation
+- Set up proper session management
 
 ## License
 
