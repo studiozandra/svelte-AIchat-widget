@@ -1,0 +1,43 @@
+# Source files (only ship dist/)
+src
+
+# Development
+.github
+.vscode
+.idea
+node_modules
+
+# Config files
+tsconfig.json
+vite.config.ts
+svelte.config.js
+
+# Documentation (except what's in package.json files array)
+*.md
+!README.md
+!LICENSE
+!CHANGELOG.md
+
+# Testing
+*.test.*
+*.spec.*
+coverage
+
+# Build artifacts
+.svelte-kit
+build
+package
+
+# Environment
+.env
+.env.*
+
+# CI/CD
+.github
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

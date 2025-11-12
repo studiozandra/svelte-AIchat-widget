@@ -1,0 +1,91 @@
+{
+	"name": "@studiozandra/svelte-ai-chat-widget",
+	"version": "1.0.0",
+	"description": "A reusable AI-powered chatbot widget for SvelteKit applications with SSE streaming support, built with Svelte 5 runes",
+	"author": "Zandra Kubota <studiozandra@users.noreply.github.com>",
+	"license": "MIT",
+	"keywords": [
+		"svelte",
+		"sveltekit",
+		"svelte5",
+		"chatbot",
+		"ai",
+		"claude",
+		"anthropic",
+		"chat-widget",
+		"sse",
+		"streaming",
+		"component-library",
+		"ui-component",
+		"runes"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/studiozandra/svelte-ai-chat-widget.git"
+	},
+	"bugs": {
+		"url": "https://github.com/studiozandra/svelte-ai-chat-widget/issues"
+	},
+	"homepage": "https://github.com/studiozandra/svelte-ai-chat-widget#readme",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build && npm run package",
+		"preview": "vite preview",
+		"prepare": "svelte-kit sync || echo ''",
+		"prepack": "svelte-kit sync && svelte-package && publint",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"audit:security": "npm audit --audit-level=moderate",
+		"audit:fix": "npm audit fix",
+		"prepublishOnly": "npm run audit:security && npm run check && npm run package",
+		"package": "svelte-kit sync && svelte-package",
+		"package:dry-run": "npm pack --dry-run",
+		"size:check": "npm run package && du -sh dist/",
+		"outdated": "npm outdated",
+		"doctor": "npm doctor"
+	},
+	"files": [
+		"dist",
+		"!dist/**/*.test.*",
+		"!dist/**/*.spec.*",
+		"templates",
+		"README.md",
+		"LICENSE",
+		"CHANGELOG.md"
+	],
+	"sideEffects": [
+		"**/*.css"
+	],
+	"svelte": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"svelte": "./dist/index.js"
+		}
+	},
+	"peerDependencies": {
+		"svelte": "^5.0.0"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-auto": "^6.1.0",
+		"@sveltejs/kit": "^2.43.2",
+		"@sveltejs/package": "^2.5.4",
+		"@sveltejs/vite-plugin-svelte": "^6.2.0",
+		"publint": "^0.3.13",
+		"svelte": "^5.39.5",
+		"svelte-check": "^4.3.2",
+		"typescript": "^5.9.2",
+		"vite": "^7.1.7"
+	},
+	"engines": {
+		"node": ">=18.0.0",
+		"npm": ">=9.0.0"
+	},
+	"dependencies": {
+		"@anthropic-ai/sdk": "^0.68.0",
+		"@types/better-sqlite3": "^7.6.13",
+		"better-sqlite3": "^12.4.1"
+	}
+}
