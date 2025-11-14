@@ -3,6 +3,8 @@
  * Ensures all required environment variables are present
  */
 
+import { env } from '$env/dynamic/private';
+
 /**
  * Validates and returns environment variables
  * Throws an error if required variables are missing
@@ -12,7 +14,7 @@ export function validateEnv() {
 	const missing: string[] = [];
 
 	for (const varName of requiredVars) {
-		if (!process.env[varName]) {
+		if (!env[varName]) {
 			missing.push(varName);
 		}
 	}
@@ -34,26 +36,26 @@ export function getEnvConfig() {
 
 	return {
 		// Anthropic API Configuration
-		anthropicApiKey: process.env.ANTHROPIC_API_KEY!,
-		anthropicModel: process.env.ANTHROPIC_MODEL || 'claude-3-5-sonnet-20241022',
+		anthropicApiKey: env.ANTHROPIC_API_KEY!,
+		anthropicModel: env.ANTHROPIC_MODEL || 'claude-sonnet-4-5-20250929',
 
 		// Rate limiting configuration
-		rateLimitRequests: parseInt(process.env.RATE_LIMIT_REQUESTS || '10'),
-		rateLimitWindowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '60000'),
+		rateLimitRequests: parseInt(env.RATE_LIMIT_REQUESTS || '10'),
+		rateLimitWindowMs: parseInt(env.RATE_LIMIT_WINDOW_MS || '60000'),
 
 		// Database configuration
-		databasePath: process.env.DATABASE_PATH || 'chat.db',
+		databasePath: env.DATABASE_PATH || 'chat.db',
 
 		// Max tokens for AI responses
-		maxTokens: parseInt(process.env.MAX_TOKENS || '2048'),
+		maxTokens: parseInt(env.MAX_TOKENS || '2048'),
 
 		// System prompt (optional)
 		systemPrompt:
-			process.env.SYSTEM_PROMPT ||
+			env.SYSTEM_PROMPT ||
 			'You are a helpful AI assistant. Provide concise, accurate, and friendly responses.',
 
 		// Enable debug mode
-		debugMode: process.env.DEBUG === 'true'
+		debugMode: env.DEBUG === 'true'
 	};
 }
 

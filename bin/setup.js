@@ -109,6 +109,8 @@ async function main() {
 		const shouldInstallDemo = !installDemo || installDemo.toLowerCase() !== 'n';
 
 		let demoRoutePath = 'chatbot-demo';
+		let protectDemoPage = true;
+
 		if (shouldInstallDemo) {
 			const customRoute = await question(
 				rl,
@@ -117,6 +119,15 @@ async function main() {
 			if (customRoute && customRoute.trim()) {
 				demoRoutePath = customRoute.trim();
 			}
+
+			// Ask about authentication protection
+			log(`\n${colors.yellow}ℹ️  Note: Backend endpoints already require authentication.${colors.reset}`);
+			log(`${colors.yellow}ℹ️  Choose 'n' only if you want to test the UI without auth first.${colors.reset}\n`);
+			const protectPage = await question(
+				rl,
+				`${colors.blue}Protect demo page with authentication? (y/n) [y]: ${colors.reset}`
+			);
+			protectDemoPage = !protectPage || protectPage.toLowerCase() !== 'n';
 		}
 
 		log('\n📦 Installing backend files...', 'cyan');
@@ -194,6 +205,22 @@ async function main() {
 			} else {
 				await fs.promises.copyFile(demoSrc, demoDest);
 				log(`  ✓ Created src/routes/${demoRoutePath}/+page.svelte`, 'green');
+			}
+
+			// Copy +page.server.ts if authentication protection is enabled
+			if (protectDemoPage) {
+				const serverSrc = path.join(templatesDir, 'chat-page-server-template.ts');
+				const serverDest = path.join(demoDir, '+page.server.ts');
+
+				if (await fileExists(serverDest)) {
+					log(`  ⚠️  Server file already exists at src/routes/${demoRoutePath}/+page.server.ts`, 'yellow');
+				} else {
+					await fs.promises.copyFile(serverSrc, serverDest);
+					log(`  ✓ Created src/routes/${demoRoutePath}/+page.server.ts (auth protected)`, 'green');
+				}
+			} else {
+				log(`  ⚠️  Demo page is NOT protected by authentication`, 'yellow');
+				log(`     Users can access it without logging in`, 'yellow');
 			}
 		}
 
