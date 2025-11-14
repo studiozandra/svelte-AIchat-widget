@@ -1,0 +1,54 @@
+{
+  "company": "Your Company Name",
+  "description": "Customer support knowledge base - customize this file with your product-specific information",
+  "faqs": [
+    {
+      "category": "refunds",
+      "question": "How long do refunds take?",
+      "answer": "Refunds are processed within 10 business days to your original payment method. You will receive an email confirmation once the refund has been initiated.",
+      "keywords": ["refund", "money back", "return", "reimbursement", "payment back"]
+    },
+    {
+      "category": "shipping",
+      "question": "What are shipping times?",
+      "answer": "We offer two shipping options:\n- Standard shipping: 5-7 business days\n- Express shipping: 2-3 business days\n\nAll orders are processed within 24 hours of purchase.",
+      "keywords": ["shipping", "delivery", "tracking", "when will it arrive", "ship", "sent"]
+    },
+    {
+      "category": "shipping",
+      "question": "How do I track my order?",
+      "answer": "Once your order ships, you'll receive a tracking number via email. You can use this number to track your package on our website or the carrier's website.",
+      "keywords": ["track", "tracking number", "where is my order", "status", "location"]
+    },
+    {
+      "category": "account",
+      "question": "How do I reset my password?",
+      "answer": "To reset your password:\n1. Click 'Forgot Password' on the login page\n2. Enter your email address\n3. Check your email for a reset link\n4. Follow the link and create a new password\n\nIf you don't receive the email within 5 minutes, check your spam folder.",
+      "keywords": ["password", "reset", "forgot password", "login", "can't log in", "locked out"]
+    },
+    {
+      "category": "products",
+      "question": "What is your return policy?",
+      "answer": "We offer a 30-day return policy on most items. Products must be in original condition with tags attached. To initiate a return:\n1. Contact our support team\n2. Receive a return authorization number\n3. Ship the item back with the authorization number\n\nRefunds are processed within 10 business days of receiving the returned item.",
+      "keywords": ["return", "return policy", "send back", "don't want", "change mind", "exchange"]
+    },
+    {
+      "category": "support",
+      "question": "How can I contact customer support?",
+      "answer": "You can reach our customer support team:\n- Email: support@yourcompany.com\n- Phone: 1-800-555-0123 (Mon-Fri, 9am-5pm EST)\n- Live chat: Available on our website during business hours\n\nWe typically respond to emails within 24 hours.",
+      "keywords": ["contact", "support", "help", "reach", "talk to", "speak with", "email", "phone"]
+    },
+    {
+      "category": "pricing",
+      "question": "Do you offer discounts or promotions?",
+      "answer": "Yes! We regularly offer promotions:\n- Sign up for our newsletter to receive a 10% off welcome code\n- Follow us on social media for flash sales\n- Check our website's promotions page for current offers\n\nPromotions cannot be combined unless explicitly stated.",
+      "keywords": ["discount", "promo", "promotion", "coupon", "sale", "deal", "save money", "cheaper"]
+    },
+    {
+      "category": "technical",
+      "question": "What browsers are supported?",
+      "answer": "Our website supports the latest versions of:\n- Google Chrome\n- Mozilla Firefox\n- Safari\n- Microsoft Edge\n\nFor the best experience, we recommend keeping your browser up to date.",
+      "keywords": ["browser", "compatible", "doesn't work", "technical issue", "not loading", "error"]
+    }
+  ]
+}

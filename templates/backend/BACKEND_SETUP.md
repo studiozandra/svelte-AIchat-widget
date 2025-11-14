@@ -20,6 +20,8 @@ mkdir -p src/lib/server
 cp templates/backend/db.ts src/lib/server/
 cp templates/backend/env.ts src/lib/server/
 cp templates/backend/rate-limit.ts src/lib/server/
+cp templates/backend/knowledge.ts src/lib/server/
+cp templates/backend/knowledge-base.json src/lib/server/
 
 # Copy API routes
 mkdir -p src/routes/api/chat/send src/routes/api/chat/history
@@ -39,7 +41,27 @@ ANTHROPIC_API_KEY=sk-ant-api-YOUR-KEY-HERE
 ANTHROPIC_MODEL=claude-3-5-sonnet-20241022
 ```
 
-### 4. Start Server
+### 4. Customize Knowledge Base (Optional)
+
+Edit `src/lib/server/knowledge-base.json` with your product-specific FAQs:
+
+```json
+{
+  "company": "Your Company Name",
+  "faqs": [
+    {
+      "category": "support",
+      "question": "How do I contact support?",
+      "answer": "Email us at support@yourcompany.com",
+      "keywords": ["contact", "support", "help", "email"]
+    }
+  ]
+}
+```
+
+**📖 Full guide: [KNOWLEDGE_BASE.md](KNOWLEDGE_BASE.md)**
+
+### 5. Start Server
 
 ```bash
 npm run dev
@@ -78,6 +100,15 @@ In-memory rate limiter (10 req/min default).
 - **POST /api/chat/send** - SSE streaming with context
 - **GET /api/chat/history** - Paginated message retrieval
 
+### Knowledge Base (`knowledge.ts` + `knowledge-base.json`)
+RAG (Retrieval Augmented Generation) system that:
+- Searches product-specific FAQs based on user questions
+- Injects relevant information into the AI's system prompt
+- Prevents hallucinations by constraining responses to known information
+- Easy to customize via JSON file (no code changes needed)
+
+**📖 See [KNOWLEDGE_BASE.md](KNOWLEDGE_BASE.md) for customization guide**
+
 ## Testing
 
 ```bash
@@ -97,6 +128,7 @@ curl "http://localhost:5173/api/chat/history?sessionId=test&limit=10"
 - ✅ Input validation (message length, types)
 - ✅ SQL injection prevention (parameterized queries)
 - ✅ Error handling with proper HTTP codes
+- ✅ Knowledge base prevents AI hallucinations (RAG-based responses)
 
 ## Production Notes
 

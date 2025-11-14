@@ -99,7 +99,17 @@ async function main() {
 		log('  ✓ Database utilities (SQLite)', 'green');
 		log('  ✓ Environment config', 'green');
 		log('  ✓ Rate limiting', 'green');
+		log('  ✓ Knowledge base (optional)', 'green');
 		log('  ✓ Demo page (optional)\n', 'green');
+
+		// Ask about knowledge base installation
+		log(`${colors.yellow}ℹ️  Knowledge Base: Provides RAG (Retrieval Augmented Generation) to prevent AI hallucinations.${colors.reset}`);
+		log(`${colors.yellow}ℹ️  The chatbot will only answer using information from your custom FAQ database.${colors.reset}\n`);
+		const installKnowledgeBase = await question(
+			rl,
+			`${colors.blue}Install knowledge base system? (y/n) [y]: ${colors.reset}`
+		);
+		const shouldInstallKnowledgeBase = !installKnowledgeBase || installKnowledgeBase.toLowerCase() !== 'n';
 
 		// Ask about demo page installation
 		const installDemo = await question(
@@ -138,6 +148,12 @@ async function main() {
 
 		// Copy server utilities
 		const backendFiles = ['db.ts', 'env.ts', 'rate-limit.ts'];
+
+		// Add knowledge base files if requested
+		if (shouldInstallKnowledgeBase) {
+			backendFiles.push('knowledge.ts', 'knowledge-base.json');
+		}
+
 		for (const file of backendFiles) {
 			const src = path.join(templatesDir, 'backend', file);
 			const dest = path.join(srcLibServer, file);
@@ -154,17 +170,24 @@ async function main() {
 		const apiRoutesDir = path.join(projectRoot, 'src', 'routes', 'api', 'chat');
 		await fs.promises.mkdir(apiRoutesDir, { recursive: true });
 
-		// Copy send endpoint
+		// Copy send endpoint (with or without knowledge base)
 		const sendDir = path.join(apiRoutesDir, 'send');
 		await fs.promises.mkdir(sendDir, { recursive: true });
-		const sendSrc = path.join(templatesDir, 'backend', 'api', 'chat', 'send', '+server.ts');
+
+		// Choose the appropriate version based on knowledge base selection
+		const sendSrcFile = shouldInstallKnowledgeBase
+			? '+server.ts'  // With knowledge base
+			: '+server.no-kb.ts';  // Without knowledge base
+
+		const sendSrc = path.join(templatesDir, 'backend', 'api', 'chat', 'send', sendSrcFile);
 		const sendDest = path.join(sendDir, '+server.ts');
 
 		if (await fileExists(sendDest)) {
 			log(`  ⚠️  Skipping send endpoint (already exists)`, 'yellow');
 		} else {
 			await fs.promises.copyFile(sendSrc, sendDest);
-			log(`  ✓ Created src/routes/api/chat/send/+server.ts`, 'green');
+			const kbNote = shouldInstallKnowledgeBase ? ' (with knowledge base)' : '';
+			log(`  ✓ Created src/routes/api/chat/send/+server.ts${kbNote}`, 'green');
 		}
 
 		// Copy history endpoint
@@ -241,16 +264,28 @@ async function main() {
 		log('   cp .env.example .env', 'yellow');
 		log('   # Add your ANTHROPIC_API_KEY to .env', 'yellow');
 
-		log('\n4. Start your dev server:', 'bright');
+		if (shouldInstallKnowledgeBase) {
+			log('\n4. Customize your knowledge base (optional):', 'bright');
+			log('   Edit src/lib/server/knowledge-base.json with your FAQs', 'yellow');
+			log('   See templates/backend/KNOWLEDGE_BASE.md for guide', 'yellow');
+		}
+
+		const stepNumber = shouldInstallKnowledgeBase ? '5' : '4';
+		log(`\n${stepNumber}. Start your dev server:`, 'bright');
 		log('   npm run dev', 'yellow');
 
 		if (shouldInstallDemo) {
-			log(`\n5. View the demo at:`, 'bright');
+			const demoStepNumber = shouldInstallKnowledgeBase ? '6' : '5';
+			log(`\n${demoStepNumber}. View the demo at:`, 'bright');
 			log(`   http://localhost:5173/${demoRoutePath}`, 'cyan');
 		}
 
 		log('\n📚 Documentation:', 'bright');
 		log('   Backend setup: templates/backend/BACKEND_SETUP.md', 'blue');
+		if (shouldInstallKnowledgeBase) {
+			log('   Knowledge base: templates/backend/KNOWLEDGE_BASE.md', 'blue');
+			log('   Customize FAQs: src/lib/server/knowledge-base.json', 'yellow');
+		}
 		log('   Main README: node_modules/@studiozandra/svelte-ai-chat-widget/README.md\n', 'blue');
 
 		log('Need help? https://github.com/studiozandra/svelte-ai-chat-widget/issues\n', 'cyan');

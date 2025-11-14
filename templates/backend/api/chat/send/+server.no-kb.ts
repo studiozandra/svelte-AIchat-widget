@@ -10,7 +10,6 @@ import { getEnvConfig } from '$lib/server/env';
 import { getOrCreateSession, saveMessage, getConversationHistory } from '$lib/server/db';
 import { checkRateLimit } from '$lib/server/rate-limit';
 import { auth } from '$lib/server/auth';
-import { searchKnowledgeBase, formatKnowledgeForPrompt } from '$lib/server/knowledge';
 
 const config = getEnvConfig();
 const anthropic = new Anthropic({ apiKey: config.anthropicApiKey });
@@ -108,20 +107,11 @@ export const POST: RequestHandler = async ({ request, getClientAddress }) => {
 						content: msg.content
 					}));
 
-					// Search knowledge base for relevant information
-					const relevantFaqs = searchKnowledgeBase(message);
-					const knowledgeContext = formatKnowledgeForPrompt(relevantFaqs);
-
-					// Inject knowledge base into system prompt
-					const enhancedSystemPrompt = knowledgeContext
-						? `${config.systemPrompt}\n\n${knowledgeContext}`
-						: config.systemPrompt;
-
 					// Create streaming request to Anthropic
 					const response = await anthropic.messages.create({
 						model: config.anthropicModel,
 						max_tokens: config.maxTokens,
-						system: enhancedSystemPrompt,
+						system: config.systemPrompt,
 						messages,
 						stream: true
 					});
