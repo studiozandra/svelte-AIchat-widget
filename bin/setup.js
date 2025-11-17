@@ -25,7 +25,13 @@ const colors = {
 };
 
 function log(message, color = 'reset') {
-	console.log(`${colors[color]}${message}${colors.reset}`);
+	// Disable colors on Windows to prevent MINGW64 buffering issues
+	const isWindows = process.platform === 'win32';
+	if (isWindows) {
+		console.log(message);
+	} else {
+		console.log(`${colors[color]}${message}${colors.reset}`);
+	}
 }
 
 function createInterface() {
@@ -264,20 +270,24 @@ async function main() {
 		log('   cp .env.example .env', 'yellow');
 		log('   # Add your ANTHROPIC_API_KEY to .env', 'yellow');
 
+		// Use a dynamic step counter for correct sequential numbering
+		let currentStep = 4;
+
 		if (shouldInstallKnowledgeBase) {
-			log('\n4. Customize your knowledge base (optional):', 'bright');
+			log(`\n${currentStep}. Customize your knowledge base (optional):`, 'bright');
 			log('   Edit src/lib/server/knowledge-base.json with your FAQs', 'yellow');
 			log('   See templates/backend/KNOWLEDGE_BASE.md for guide', 'yellow');
+			currentStep++;
 		}
 
-		const stepNumber = shouldInstallKnowledgeBase ? '5' : '4';
-		log(`\n${stepNumber}. Start your dev server:`, 'bright');
+		log(`\n${currentStep}. Start your dev server:`, 'bright');
 		log('   npm run dev', 'yellow');
+		currentStep++;
 
 		if (shouldInstallDemo) {
-			const demoStepNumber = shouldInstallKnowledgeBase ? '6' : '5';
-			log(`\n${demoStepNumber}. View the demo at:`, 'bright');
+			log(`\n${currentStep}. View the demo at:`, 'bright');
 			log(`   http://localhost:5173/${demoRoutePath}`, 'cyan');
+			currentStep++;
 		}
 
 		log('\n📚 Documentation:', 'bright');

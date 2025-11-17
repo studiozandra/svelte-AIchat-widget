@@ -110,12 +110,20 @@ export const POST: RequestHandler = async ({ request, getClientAddress }) => {
 
 					// Search knowledge base for relevant information
 					const relevantFaqs = searchKnowledgeBase(message);
+					console.log('🔍 Knowledge base search for:', message);
+					console.log('📚 Found FAQs:', relevantFaqs.length, 'results');
+					console.log('📝 FAQ details:', JSON.stringify(relevantFaqs, null, 2));
+
 					const knowledgeContext = formatKnowledgeForPrompt(relevantFaqs);
+					console.log('💬 Knowledge context length:', knowledgeContext.length);
+					console.log('💬 Knowledge context:', knowledgeContext);
 
 					// Inject knowledge base into system prompt
 					const enhancedSystemPrompt = knowledgeContext
 						? `${config.systemPrompt}\n\n${knowledgeContext}`
 						: config.systemPrompt;
+
+					console.log('🤖 Final system prompt length:', enhancedSystemPrompt.length);
 
 					// Create streaming request to Anthropic
 					const response = await anthropic.messages.create({

@@ -55,7 +55,7 @@ export async function streamResponse(
 						}
 
 						// Only pass content to onChunk, not control messages
-						const content = parsed.content || parsed.text;
+						const content = parsed.chunk || parsed.content || parsed.text;
 						if (content) {
 							onChunk(content);
 						}
