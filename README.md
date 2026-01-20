@@ -78,7 +78,7 @@ If you prefer manual setup:
 
 Then copy backend files from `templates/backend/` to your project.
 
-📖 **[Full Backend Setup Guide →](./templates/backend/BACKEND_SETUP.md)**
+📖 **[Full Backend Setup Guide →](https://github.com/studiozandra/svelte-AIchat-widget/blob/master/templates/backend/BACKEND_SETUP.md)**
 
 ## Props
 
@@ -207,7 +207,7 @@ GET /api/chat/history?sessionId=uuid&limit=50&offset=0
 }
 ```
 
-📖 **[Complete Backend Implementation Guide →](./templates/backend/BACKEND_SETUP.md)**
+📖 **[Complete Backend Implementation Guide →](https://github.com/studiozandra/svelte-AIchat-widget/blob/master/templates/backend/BACKEND_SETUP.md)**
 
 ## TypeScript Support
 
@@ -276,7 +276,8 @@ MIT © studiozandra
 
 ## Links
 
-- 🐛 [Report a bug](https://github.com/studiozandra/svelte-ai-chat-widget/issues)
-- 💡 [Request a feature](https://github.com/studiozandra/svelte-ai-chat-widget/issues)
-- 📖 [Backend Setup Guide](./templates/backend/BACKEND_SETUP.md)
-- 📝 [Changelog](./CHANGELOG.md)
+- 📦 [npm Package](https://www.npmjs.com/package/@studiozandra/svelte-ai-chat-widget)
+- 🐛 [Report a bug](https://github.com/studiozandra/svelte-AIchat-widget/issues)
+- 💡 [Request a feature](https://github.com/studiozandra/svelte-AIchat-widget/issues)
+- 📖 [Backend Setup Guide](https://github.com/studiozandra/svelte-AIchat-widget/blob/master/templates/backend/BACKEND_SETUP.md)
+- 📝 [Changelog](https://github.com/studiozandra/svelte-AIchat-widget/blob/master/CHANGELOG.md)
